@@ -1,0 +1,16 @@
+/* 
+* i am comment;
+* can you distinguish
+*/
+
+if (){
+	for (; ;){
+	
+	}
+	while ( ){
+	
+	}
+	switch (){
+		case:break;
+	}
+}
