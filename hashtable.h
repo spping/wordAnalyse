@@ -26,7 +26,7 @@ typedef int Status;
 #define OK			1
 
 unsigned int hash(char *str);
-void collision(unsigned int *pp);
+void collision(int si, unsigned int *pp);
 
 Status SearchHash(HashTable H, char *key, unsigned int *p);
 Status InsertHash(HashTable *H, ElemType elem);

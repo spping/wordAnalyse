@@ -1,41 +1,43 @@
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX_BUF_LEN 25
 
-void preProc(char *filename, char *res){
-	FILE *stream;
-	if((stream = fopen("D:/sping/c1/test","r")) == NULL)
-	{
-		fprintf(stderr,"Can not open output file.\n");
-		return ;
+int preProc(FILE *stream, char *res){
+  int ch, j = 0;
+  for(int i = 0; i < MAX_BUF_LEN && (ch = fgetc(stream)) != EOF; ){
+    if(ch == '/'){
+      ch = fgetc(stream);
+      if(ch != '*'){
+	ungetc(ch, stream);
+      }
+      if(ch == '*'){
+	while(fgetc(stream) != '*' || fgetc(stream) != '/')
+	  ;
+	continue;
+      }
+    }
+    if(!isspace(ch)){
+      res[i ++] = ch;
+      j ++;
+    }
+    else {
+      while((ch = fgetc(stream)) != EOF){
+	if(isspace(ch)){
+	  continue;
 	}
-	int ch;
-	for(int i = 0; (ch = fgetc(stream)) != EOF; ){
-		if(ch == '/'){
-			ch = fgetc(stream);
-			if(ch != '*'){
-				ungetc(ch, stream);
-			}
-			if(ch == '*'){
-				while(fgetc(stream) != '*' || fgetc(stream) != '/')
-					;
-				continue;
-			}
-		}
-		if(ch != ' ' && ch != '\t' && ch != '\n')
-			res[i ++] = ch;
-		else {
-			while((ch = fgetc(stream)) != EOF){
-				if(ch == ' ' || ch == '\t' || ch == '\n'){
-					continue;
-				}
-				break;
-			}
-			if(ch == EOF)
-				break;
-			ungetc(ch, stream);
-			res[i] = 0;
+	break;
+      }
+      if(ch == EOF)
+	break;
+      ungetc(ch, stream);
+      if(i == 0)
+	continue;
+      res[i] = ' ';
+      i ++;
+      j ++;
+    }
 
-			i = 0;
-		}
-
-	}
+  }
+  return j;
 }
