@@ -89,6 +89,15 @@ Status CreateHash(HashTable *H, char *filename) {
 	return OK;
 }
 
+int keyOrIdentify(char *fi, char *word){
+	char *p = word;
+	while (isalnum(*fi) && fi != NULL) {
+		*(word ++) = *(fi ++);
+	}
+	*word = 0;
+	return strlen(p);
+}
+
 int main() {
 	char *filename = "Src";
 	HashTable H;
@@ -107,14 +116,15 @@ int main() {
 	char res[50] = { 0 };
 	char *st = res, *fi = res;
 	char word[25];
+	/* j表示每次预处理程序读取到的字符数量，正常情况下是25；然而可能最后一次字符不够
+	*  boolean 类型的 truncate = 0 表示没有被截断； = 1表示关键字或者标识符可能被截断；= 2表示双操作符可能被截断
+	*/
 	int i = 0, truncate = 0, j = 0;
 
 	while (j = preProc(stream, st)) {
+		*(st + j) = 0;
 		if (truncate == 1) {
-			while (isalnum(*fi) && fi <= st + j) {
-				word[i++] = *fi;
-				fi++;
-			}
+			fi += keyOrIdentify(fi, word + strlen(word));
 			int a = 0;
 			if (SearchHash(H, word, &a)) {
 				printf("Find!\n");
@@ -123,18 +133,12 @@ int main() {
 		}
 		for (; fi <= st + j;) {
 			if (isalpha(*fi)) {
-				char word[25];
-				i = 0;
-				while (isalnum(*fi) && fi <= st + j) {
-					word[i++] = *fi;
-					fi++;
-				}
+				fi += keyOrIdentify(fi, word);
 				if (fi == st + 25) {
 					truncate = 1;
 					break;
 				}
 				int a;
-				word[i] = 0;
 				if (SearchHash(H, word, &a)) {
 					printf("Find!\n");
 				} else
