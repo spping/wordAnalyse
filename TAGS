@@ -1,0 +1,30 @@
+
+preProc.c,44
+#define MAX_BUF_LEN 4,58
+int preProc(6,82
+
+hashtable.h,315
+#define HASHTABLE_H_9,103
+	int val;12,142
+	char key[key13,152
+}ElemType;ElemType14,167
+	ElemType *elem;elem16,195
+	int count;17,212
+	int sizeindex;18,224
+}HashTable;HashTable19,240
+typedef int Status;21,253
+#define SUCCESS 23,274
+#define UNSUCCESS 24,293
+#define DUPLICATE 25,315
+#define OK	26,337
+
+HashTable.c,124
+unsigned int hash(14,175
+Status InsertHash(28,448
+int SearchHash(40,638
+void collision(53,911
+Status CreateHash(57,981
+
+wordAnalyse.c,41
+int getStrOrOper(9,141
+int main(18,315

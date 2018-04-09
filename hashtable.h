@@ -21,14 +21,14 @@ typedef struct {
 typedef int Status;
 
 #define SUCCESS 	1
-#define UNSUCCESS 	0
+#define UNSUCCESS 	-1
 #define DUPLICATE  -1
 #define OK			1
 
 unsigned int hash(char *str);
 void collision(int si, unsigned int *pp);
 
-Status SearchHash(HashTable H, char *key, unsigned int *p);
+int SearchHash(HashTable H, char *key, unsigned int *p);
 Status InsertHash(HashTable *H, ElemType elem);
 Status CreateHash(HashTable *H, char *);
 

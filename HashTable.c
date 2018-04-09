@@ -4,18 +4,13 @@
  *  Created on: 2018年3月23日
  *      Author: freaky
  */
-#include "hashtable.h"
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <ctype.h>
-
+#include <stdio.h>
+#include "hashtable.h"
 /*
  *
  * */
-
-int preProc(FILE *stream, char *res);
-
 unsigned int hash(char* str) {
 	unsigned int hash = 0;
 	int i;
@@ -33,7 +28,7 @@ unsigned int hash(char* str) {
 Status InsertHash(HashTable *H, ElemType elem) {
 
 	unsigned int p;
-	if (SearchHash(*H, elem.key, &p))
+	if (SearchHash(*H, elem.key, &p) != -1)
 		return DUPLICATE;
 	else {
 		H->elem[p] = elem;
@@ -42,7 +37,7 @@ Status InsertHash(HashTable *H, ElemType elem) {
 	}
 }
 
-Status SearchHash(HashTable H, char *key, unsigned int *pp) {
+int SearchHash(HashTable H, char *key, unsigned int *pp) {
 	*pp = hash(key);
 	int si = 1;
 	while (H.elem[*pp].key[0] != 0 && strcmp(H.elem[*pp].key, key) != 0) {
@@ -50,7 +45,7 @@ Status SearchHash(HashTable H, char *key, unsigned int *pp) {
 		si++;
 	}
 	if (!strcmp(key, H.elem[*pp].key))
-		return SUCCESS;
+		return *pp;
 	else
 		return UNSUCCESS;
 }
@@ -86,102 +81,4 @@ Status CreateHash(HashTable *H, char *filename) {
 	}
 
 	return OK;
-}
-
-int keyOrIdentify(char *fi, char *word, int (*func)(int c)){
-	char *p = word;
-	while (func(*fi) && fi != NULL) {
-		*(word ++) = *(fi ++);
-	}
-	*word = 0;
-	return strlen(p);
-}
-
-int main() {
-	char *filename = "Src";
-	HashTable H;
-	H.elem = malloc(80 * sizeof(ElemType));
-	CreateHash(&H, filename);
-	for (int i = 0; i < 80; i++) {
-		if (H.elem[i].key[0] != 0)
-			printf("%d\t%s\n", H.elem[i].val, H.elem[i].key);
-	}
-	FILE *stream;
-	if ((stream = fopen("test", "r")) == NULL) {
-		fprintf(stderr, "Can not open output file.\n");
-		return 0;
-	}
-
-	char res[51] = { 0 };
-	char *st = res, *fi = res;
-	char word[25];
-	/* j表示每次预处理程序读取到的字符数量，正常情况下是25；然而可能最后一次字符不够
-	*  boolean 类型的 truncate = 0 表示没有被截断； = 1表示关键字或者标识符可能被截断；= 2表示双操作符可能被截断
-	*/
-	int i = 0, truncate = 0, j = 0;
-
-	while (j = preProc(stream, st)) {
-		*(st + j) = 0;
-		/*
-		 *此处便于检测fi到达缓冲区末尾
-		 */
-		int a = 0;
-		if (truncate == 1) {
-			fi += keyOrIdentify(fi, word + strlen(word), isalnum);
-			if (SearchHash(H, word, &a)) {
-				printf("Find!\t%s\n", word);
-		} else
-			printf("NoResults!\t%s\n", word);
-
-		}
-		if(truncate == 2){
-			fi += keyOrIdentify(fi, word + strlen(word), ispunct);
-			while(!SearchHash(H, word, &a)){
-				word[strlen(word) - 1] = 0;
-				fi --;
-			}
-			printf("Find!\t%s\n", word);
-		}
-
-		for (; fi <= st + j;) {
-			if (isalpha(*fi)) {
-				fi += keyOrIdentify(fi, word, isalnum);
-				if (fi == st + 25) {
-					truncate = 1;
-					break;
-				}
-				int a;
-				if (SearchHash(H, word, &a)) {
-					printf("Find!\t%s\n", word);
-				} else
-					printf("NoResults!\t%s\n", word);
-			} else {
-				if(ispunct(*fi)){
-					fi += keyOrIdentify(fi, word, ispunct);
-				        int a = 0;
-					while(!SearchHash(H, word, &a)){
-						word[strlen(word) - 1] = 0;
-						fi --;
-					}
-
-					if(fi == st + 25){
-						truncate = 2;
-						break;
-					}
-					printf("Find!\t%s\n", word);
-
-
-				} else fi ++;
-				continue;
-			}
-
-		}
-		if (res == st)
-			st += 25;
-		else {
-			st = res;
-			fi = res;
-		}
-	}
-	return 0;
 }
