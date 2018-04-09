@@ -3,15 +3,16 @@
 * can you distinguish
 */
 
-if (){
-	for (; ;){
-        si;
+if ( test1 >= test2 ){
+	for (i = 0; i <= 10 ; i ++){
+        	si;
 	
 	}
-	while ( ){
-	
+	while ( test1 <= test2 ){
+		fi;
 	}
-	switch (){
-		case:break;
+	switch (sc){
+		case:case1;
+		break;
 	}
 }

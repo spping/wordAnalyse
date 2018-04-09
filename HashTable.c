@@ -19,7 +19,6 @@ int preProc(FILE *stream, char *res);
 unsigned int hash(char* str) {
 	unsigned int hash = 0;
 	int i;
-
 	for (i = 0; *str; i++) {
 		if ((i & 1) == 0) {
 			hash ^= ((hash << 7) ^ (*str++) ^ (hash >> 3));
@@ -89,9 +88,9 @@ Status CreateHash(HashTable *H, char *filename) {
 	return OK;
 }
 
-int keyOrIdentify(char *fi, char *word){
+int keyOrIdentify(char *fi, char *word, int (*func)(int c)){
 	char *p = word;
-	while (isalnum(*fi) && fi != NULL) {
+	while (func(*fi) && fi != NULL) {
 		*(word ++) = *(fi ++);
 	}
 	*word = 0;
@@ -113,7 +112,7 @@ int main() {
 		return 0;
 	}
 
-	char res[50] = { 0 };
+	char res[51] = { 0 };
 	char *st = res, *fi = res;
 	char word[25];
 	/* j表示每次预处理程序读取到的字符数量，正常情况下是25；然而可能最后一次字符不够
@@ -123,28 +122,56 @@ int main() {
 
 	while (j = preProc(stream, st)) {
 		*(st + j) = 0;
+		/*
+		 *此处便于检测fi到达缓冲区末尾
+		 */
+		int a = 0;
 		if (truncate == 1) {
-			fi += keyOrIdentify(fi, word + strlen(word));
-			int a = 0;
+			fi += keyOrIdentify(fi, word + strlen(word), isalnum);
 			if (SearchHash(H, word, &a)) {
-				printf("Find!\n");
-			} else
-				printf("NoResults!\n");
+				printf("Find!\t%s\n", word);
+		} else
+			printf("NoResults!\t%s\n", word);
+
 		}
+		if(truncate == 2){
+			fi += keyOrIdentify(fi, word + strlen(word), ispunct);
+			while(!SearchHash(H, word, &a)){
+				word[strlen(word) - 1] = 0;
+				fi --;
+			}
+			printf("Find!\t%s\n", word);
+		}
+
 		for (; fi <= st + j;) {
 			if (isalpha(*fi)) {
-				fi += keyOrIdentify(fi, word);
+				fi += keyOrIdentify(fi, word, isalnum);
 				if (fi == st + 25) {
 					truncate = 1;
 					break;
 				}
 				int a;
 				if (SearchHash(H, word, &a)) {
-					printf("Find!\n");
+					printf("Find!\t%s\n", word);
 				} else
-					printf("NoResults!\n");
+					printf("NoResults!\t%s\n", word);
 			} else {
-				fi++;
+				if(ispunct(*fi)){
+					fi += keyOrIdentify(fi, word, ispunct);
+				        int a = 0;
+					while(!SearchHash(H, word, &a)){
+						word[strlen(word) - 1] = 0;
+						fi --;
+					}
+
+					if(fi == st + 25){
+						truncate = 2;
+						break;
+					}
+					printf("Find!\t%s\n", word);
+
+
+				} else fi ++;
 				continue;
 			}
 

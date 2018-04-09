@@ -5,4 +5,4 @@ struct switch typedef union unsigned void volatile while restrict
 + - * / % ++ --
 == != > >= < <=
 && || & | ! << >> ^ ~
-( ) [ ] { }
+( ) [ ] { } , ; :
