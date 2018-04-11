@@ -5,13 +5,13 @@
 
 if ( test1 >= test2 ){
 	for (i = 0; i <= 10 ; i ++){
-        	si;
+        	si = 546;
 	
 	}
 	while ( test1 <= test2 ){
 		fi;
 	}
-	switch (sc){
+	switch (sc == 789){
 		case:case1;
 		break;
 	}

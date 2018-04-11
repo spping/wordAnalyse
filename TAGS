@@ -1,7 +1,18 @@
 
+wordAnalyse.c,40
+int getSequence(9,141
+int main(18,314
+
 preProc.c,44
 #define MAX_BUF_LEN 4,58
 int preProc(6,82
+
+HashTable.c,124
+unsigned int hash(14,175
+Status InsertHash(28,448
+int SearchHash(40,638
+void collision(53,911
+Status CreateHash(57,981
 
 hashtable.h,315
 #define HASHTABLE_H_9,103
@@ -17,14 +28,3 @@ typedef int Status;21,253
 #define UNSUCCESS 24,293
 #define DUPLICATE 25,315
 #define OK	26,337
-
-HashTable.c,124
-unsigned int hash(14,175
-Status InsertHash(28,448
-int SearchHash(40,638
-void collision(53,911
-Status CreateHash(57,981
-
-wordAnalyse.c,41
-int getStrOrOper(9,141
-int main(18,315
