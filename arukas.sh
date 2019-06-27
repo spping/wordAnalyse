@@ -1,0 +1,17 @@
+apt update;
+apt install screen unzip;
+mkdir v2ray;
+cd v2ray;
+wget https://github.com/v2ray/v2ray-core/releases/download/v4.19.1/v2ray-linux-64.zip;
+unzip v2ray-linux-64.zip;
+rm -f config.json;
+chmod +x v2ray v2ctl;
+echo -e '{"inbound":{"port":3050,"listen":"127.0.0.1","protocol":"vmess","settings":{"clients":[{"id":"dd4523c3-fa0a-4aa3-acfe-0a49c7f643ce","alterId":64}]},"streamSettings":{"network":"ws","wsSettings":{"path":"/ws"}}},"outbound":{"protocol":"freedom","settings":{}}}' > config.json;
+screen -dmS v2ray /root/v2ray/v2ray -config=/root/v2ray/config.json;
+mkdir caddy caddy/wwwroot;
+cd caddy;
+wget https://github.com/mholt/caddy/releases/download/v0.11.3/caddy_v0.11.3_linux_amd64.tar.gz;
+tar -vxf caddy_v0.11.3_linux_amd64.tar.gz;
+chmod +x caddy;
+echo -e "0.0.0.0:80 {\n    root /root/caddy/wwwroot\n    timeouts 10m\n    proxy /ws 127.0.0.1:3050 {\n        websocket\n        header_upstream -Origin\n    }\n}" > Caddyfile;
+screen -dmS caddy /root/caddy/caddy -conf=/root/caddy/Caddyfile;
