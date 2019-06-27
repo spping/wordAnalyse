@@ -1,5 +1,5 @@
 apt update;
-apt install screen unzip;
+apt install screen unzip -y;
 mkdir v2ray;
 cd v2ray;
 wget https://github.com/v2ray/v2ray-core/releases/download/v4.19.1/v2ray-linux-64.zip;
@@ -8,6 +8,7 @@ rm -f config.json;
 chmod +x v2ray v2ctl;
 echo -e '{"inbound":{"port":3050,"listen":"127.0.0.1","protocol":"vmess","settings":{"clients":[{"id":"dd4523c3-fa0a-4aa3-acfe-0a49c7f643ce","alterId":64}]},"streamSettings":{"network":"ws","wsSettings":{"path":"/ws"}}},"outbound":{"protocol":"freedom","settings":{}}}' > config.json;
 screen -dmS v2ray /root/v2ray/v2ray -config=/root/v2ray/config.json;
+cd ../;
 mkdir caddy caddy/wwwroot;
 cd caddy;
 wget https://github.com/mholt/caddy/releases/download/v0.11.3/caddy_v0.11.3_linux_amd64.tar.gz;
